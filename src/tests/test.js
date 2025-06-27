@@ -1,93 +1,68 @@
 const { expect } = require('@wdio/globals')
-const LoginPage = require('../po/login.page')
-const SecurePage = require('../po/secure.page')
+const loginPage = require('../po/login.page')
+const mainPage = require('../po/main.page')
 
 describe('My Login application', () => {
 /*     it('should login with valid credentials', async () => {
-        await LoginPage.open()
-
-        await LoginPage.login('tomsmith', 'SuperSecretPassword!')
         await expect(SecurePage.flashAlert).toBeExisting()
         await expect(SecurePage.flashAlert).toHaveText(
             expect.stringContaining('You logged into a secure area!'))
     }) */
 
-  beforeEach(async () => {
-    await browser.url("/");
+  beforeEach(async () => {    
+    await loginPage.open();
   });  
 
   it('Check the error messages: "Username is required", UC-1', async () => {
     
-    // Username and Password fields
-    const usernameInput = await $('.form_group input[data-test="username"]');
-    const passwordInput = await $('.form_group input[data-test="password"]');    
+    // Entering random Username and Password
+    await loginPage.enterCredentials('tomsmith', 'SuperSecretPassword!');
+
+    // Clearing the input fields 
+    await loginPage.enterCredentials('', '');
     
-/*     await usernameInput.click();
-    await browser.pause(1500); */
-
-
-    await usernameInput.setValue('user');
-    await passwordInput.setValue('password');
-
-    await usernameInput.setValue('');
-    await passwordInput.setValue('');    
-   
-
-    const loginButton = await $('form input[data-test="login-button"]');    
-    await loginButton.click();  
-
+    // Clicking the login button
+    await loginPage.login();
     
-    const errorField = await $('.error-message-container h3[data-test="error"]');    
-    const errorMessage = await errorField.getText();
-
+    // A variable that gets the error message
+    const errorMessage = await loginPage.errorField.getText();
+    
+    // Checking the main condition
     expect(errorMessage).toContain('Username is required');
   });    
 
   it('Check the error messages: "Password is required", UC-2', async () => {
-    
-    // Username and Password fields
-    const usernameInput = await $('.form_group input[data-test="username"]');
-    const passwordInput = await $('.form_group input[data-test="password"]');
 
+    // Entering random Username and Password
+    await loginPage.enterCredentials('tomsmith', 'SuperSecretPassword!');
 
-    await usernameInput.setValue('user');
-    await passwordInput.setValue('password');
+    // Clearing the Password field
+    await loginPage.inputPassword.setValue('');
 
-    // await usernameInput.setValue('');
-    await passwordInput.setValue('');    
-   
+    // Clicking the login button
+    await loginPage.login();
 
-    const loginButton = await $('form input[data-test="login-button"]');    
-    await loginButton.click();  
+    // A variable that gets the error message
+    const errorMessage = await loginPage.errorField.getText();
 
-    
-    const errorField = await $('.error-message-container h3[data-test="error"]');    
-    const errorMessage = await errorField.getText();
-
+    // Checking the main condition
     expect(errorMessage).toContain('Password is required');
   });
 
   it("Check successful Login, UC-3", async () => {
-        
-    // Username and Password fields
-    const usernameInput = await $('.form_group input[data-test="username"]');
-    const passwordInput = await $('.form_group input[data-test="password"]');    
-    
 
-    await usernameInput.setValue('standard_user');
-    await passwordInput.setValue('secret_sauce');
+    // Entering correct Username and Password
+    await loginPage.enterCredentials('standard_user', 'secret_sauce');
 
-    const loginButton = await $('form input[data-test="login-button"]');    
+    // Clicking the login button
+    await loginPage.login();
 
-    await loginButton.click();
+    // A variable to check successful login to the Main Page
+    const title = await mainPage.appTitle.getText();
 
-
-    // Checking that we are really logged in and entered the application page
-    const appTitle = await $('.app_logo');
-    const title = await appTitle.getText();
+    // Checking the main condition
     expect(title).toBe('Swag Labs');
-  });
-  
+  });  
   
 })
 
