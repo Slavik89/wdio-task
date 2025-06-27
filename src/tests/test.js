@@ -1,13 +1,9 @@
 const { expect } = require('@wdio/globals')
 const loginPage = require('../po/login.page')
 const mainPage = require('../po/main.page')
+const { username, password } = require('./testData')
 
 describe('My Login application', () => {
-/*     it('should login with valid credentials', async () => {
-        await expect(SecurePage.flashAlert).toBeExisting()
-        await expect(SecurePage.flashAlert).toHaveText(
-            expect.stringContaining('You logged into a secure area!'))
-    }) */
 
   beforeEach(async () => {    
     await loginPage.open();
@@ -15,54 +11,70 @@ describe('My Login application', () => {
 
   it('Check the error messages: "Username is required", UC-1', async () => {
     
-    // Entering random Username and Password
-    await loginPage.enterCredentials('tomsmith', 'SuperSecretPassword!');
+    // 1.1 Entering the username
+    await loginPage.inputUsername.click();
+    await loginPage.inputField(username);
 
-    // Clearing the input fields 
-    await loginPage.enterCredentials('', '');
+    // 1.2 Entering the password
+    await loginPage.inputPassword.click();    
+    await loginPage.inputField(password);
+
+    // 1.3 Deleting the username
+    await loginPage.inputUsername.click();
+    await browser.keys(["Control", "a", "Delete"]);
+
+    // 1.4 Deleting the password
+    await loginPage.inputPassword.click();
+    await browser.keys(["Control", "a", "Delete"]);    
     
-    // Clicking the login button
+    // 1.5 Clicking the login button
     await loginPage.login();
     
-    // A variable that gets the error message
+    // 1.6 A variable that gets the error message
     const errorMessage = await loginPage.errorField.getText();
     
-    // Checking the main condition
+    // 1.7 Checking the main condition
     expect(errorMessage).toContain('Username is required');
   });    
 
-  it('Check the error messages: "Password is required", UC-2', async () => {
+  it('Check the error messages: "Password is required", UC-2', async () => {   
 
-    // Entering random Username and Password
-    await loginPage.enterCredentials('tomsmith', 'SuperSecretPassword!');
+    // 2.1 Entering the username
+    await loginPage.inputUsername.click();
+    await loginPage.inputField(username);
 
-    // Clearing the Password field
-    await loginPage.inputPassword.setValue('');
+    // 2.2 Entering the password
+    await loginPage.inputPassword.click();    
+    await loginPage.inputField(password);
 
-    // Clicking the login button
+    // 2.3 Deleting the password
+    await loginPage.inputPassword.click();
+    await browser.keys(["Control", "a", "Delete"]);
+
+    // 2.4 Clicking the login button
     await loginPage.login();
 
-    // A variable that gets the error message
+    // 2.5 A variable that gets the error message
     const errorMessage = await loginPage.errorField.getText();
 
-    // Checking the main condition
+    // 2.6 Checking the main condition
     expect(errorMessage).toContain('Password is required');
   });
 
   it("Check successful Login, UC-3", async () => {
 
-    // Entering correct Username and Password
-    await loginPage.enterCredentials('standard_user', 'secret_sauce');
+    // 3.1 Entering correct Username and Password
+    await loginPage.enterCredentials(username, password);
 
-    // Clicking the login button
+    // 3.2 Clicking the login button
     await loginPage.login();
 
-    // A variable to check successful login to the Main Page
+    // 3.3 A variable to check successful login to the Main Page
     const title = await mainPage.appTitle.getText();
 
-    // Checking the main condition
+    // 3.4 Checking the main condition
     expect(title).toBe('Swag Labs');
-  });  
+  });
   
 })
 
