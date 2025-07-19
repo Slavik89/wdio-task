@@ -7,17 +7,10 @@ describe('My Login application', () => {
 
   beforeEach(async () => {    
     await loginPage.open();
+    await loginPage.enterCredentials(username, password);
   });  
 
   it('Check the error messages: "Username is required", UC-1', async () => {
-    
-    // 1.1 Entering the username
-    await loginPage.inputUsername.click();
-    await loginPage.inputField(username);
-
-    // 1.2 Entering the password
-    await loginPage.inputPassword.click();    
-    await loginPage.inputField(password);
 
     // 1.3 Deleting the username
     await loginPage.inputUsername.click();
@@ -28,7 +21,7 @@ describe('My Login application', () => {
     await browser.keys(["Control", "a", "Delete"]);    
     
     // 1.5 Clicking the login button
-    await loginPage.login();
+    await loginPage.loginButton.click();
     
     // 1.6 A variable that gets the error message
     const errorMessage = await loginPage.errorField.getText();
@@ -37,22 +30,14 @@ describe('My Login application', () => {
     expect(errorMessage).toContain('Username is required');
   });    
 
-  it('Check the error messages: "Password is required", UC-2', async () => {   
-
-    // 2.1 Entering the username
-    await loginPage.inputUsername.click();
-    await loginPage.inputField(username);
-
-    // 2.2 Entering the password
-    await loginPage.inputPassword.click();    
-    await loginPage.inputField(password);
+  it('Check the error messages: "Password is required", UC-2', async () => {
 
     // 2.3 Deleting the password
     await loginPage.inputPassword.click();
     await browser.keys(["Control", "a", "Delete"]);
 
     // 2.4 Clicking the login button
-    await loginPage.login();
+    await loginPage.loginButton.click();
 
     // 2.5 A variable that gets the error message
     const errorMessage = await loginPage.errorField.getText();
@@ -63,11 +48,8 @@ describe('My Login application', () => {
 
   it("Check successful Login, UC-3", async () => {
 
-    // 3.1 Entering correct Username and Password
-    await loginPage.enterCredentials(username, password);
-
     // 3.2 Clicking the login button
-    await loginPage.login();
+    await loginPage.loginButton.click();
 
     // 3.3 A variable to check successful login to the Main Page
     const title = await mainPage.appTitle.getText();

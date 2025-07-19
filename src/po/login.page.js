@@ -33,16 +33,6 @@ class LoginPage extends Page {
         await this.inputPassword.setValue(password);
     }
 
-    async login () {
-      await this.loginButton.click();
-    }
-
-    async inputField (inputText) {
-      for (let i = 0; i < inputText.length; i++) {
-        await browser.keys(inputText[i]);
-      }      
-    }
-
     /**
      * overwrite specific options to adapt it to page object
      */
