@@ -5,7 +5,7 @@ const { $ } = require('@wdio/globals')
  */
 class MainPage {
     /**
-     * define selectors using getter methods
+     * A selector that checks the title on the Main Page
      */
     get appTitle () {
         return $('.app_logo');

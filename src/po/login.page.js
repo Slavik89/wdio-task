@@ -2,11 +2,11 @@ const { $ } = require('@wdio/globals')
 const Page = require('./page');
 
 /**
- * sub page containing specific selectors and methods for a specific page
+ * Login Page
  */
 class LoginPage extends Page {
     /**
-     * define selectors using getter methods
+     * selectors using getter methods
      */
     get inputUsername () {
       return $('.form_group input[data-test="username"]');
@@ -26,7 +26,7 @@ class LoginPage extends Page {
 
     /**
      * a method to encapsule automation code to interact with the page
-     * e.g. to login using username and password
+     * to login using username and password
      */
     async enterCredentials (username, password) {
         await this.inputUsername.setValue(username);
@@ -34,7 +34,7 @@ class LoginPage extends Page {
     }
 
     /**
-     * overwrite specific options to adapt it to page object
+     * A method to go to the Login page
      */
     open () {
         return super.open();
