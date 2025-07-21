@@ -1,3 +1,6 @@
+
+const isCI = process.env.CI || process.env.GITHUB_ACTIONS;
+
 exports.config = {
     //
     // ====================
@@ -49,19 +52,26 @@ exports.config = {
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
     // https://saucelabs.com/platform/platform-configurator
     //
-    capabilities: [
-/*         {
-        browserName: 'chrome'
-        }, {
-        browserName: 'firefox'
-         }, */
-        {
-        browserName: 'chrome',
-            'goog:chromeOptions': {
-                args: ['--headless', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage', '--window-size=1920,1080']
-            }
+
+    // We use an anonymous function to switch the capabilities list depending on whether we are in a CI environment
+    capabilities: (() => {
+        if (isCI) {
+            // If we are in CI, return only headless Chrome
+            return [{
+                browserName: 'chrome',
+                'goog:chromeOptions': {
+                    args: ['--headless', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage', '--window-size=1920,1080']
+                }
+            }];
+        } else {
+            // If we are local, return all capabilities, or only those you need for local execution
+            return [{
+                browserName: 'chrome' 
+            }, {
+                browserName: 'firefox' 
+            }];
         }
-    ],
+    })(),
 
     //
     // ===================
