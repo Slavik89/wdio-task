@@ -4,20 +4,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-        - name: ⬇️ Checkout Code
+        - name: Checkout Code
           uses: actions/checkout@v4
 
-        - name: 🐢 Setup Node
+        - name: Setup Node
           uses: actions/setup-node@v4
           with:
             node-version: 'v22.14.0'
-        - name: 🏗️ Install Dependencies
+        - name: Install Dependencies
           run: npm install
 
-        - name: 🧪 Test
+        - name: Test
           run: npm run wdio
 
-        - name: 📦 Upload Logs
+        - name: Upload Logs
           uses: actions/upload-artifact@v4
           if: failure()
           with:
